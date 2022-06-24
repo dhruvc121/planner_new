@@ -1,7 +1,7 @@
 import React from 'react';
 import * as XLSX from 'xlsx';
 import { Store } from '../../../utils/store';
-
+import {shapeDetail,symDetails} from '../../../utils/constants'
 const PlanImport = () => {
     const [fileImport,setFileImport]=React.useState("")
     const fileInput = React.useRef();
@@ -23,6 +23,7 @@ const PlanImport = () => {
       field: "depth",
     }, 
   ]
+  
     // process CSV data
     const processData = dataString => {
         const dataStringLines = dataString.split(/\r\n|\n/);
@@ -42,7 +43,14 @@ const PlanImport = () => {
                   d = d.substring(d.length - 2, 1);
               }
               if (headers[j]) {
-                obj[headers[j].toLowerCase().trim()] = d;
+                if(headers[j].toLowerCase().trim()=='shape'){
+                  obj[headers[j].toLowerCase().trim()] = shapeDetail.find(obj=>d==obj.shapename).original_name
+                }else if(headers[j].toLowerCase().trim()=='sym'){
+                  obj[headers[j].toLowerCase().trim()] = symDetails.find(obj=>d==obj.symName).original_name
+                  //obj[headers[j].toLowerCase().trim()] = symDetails.find(item=>obj.grading==item.symName).original_name
+                }else{
+                  obj[headers[j].toLowerCase().trim()] = d;
+                }
               }
             }
     
@@ -54,7 +62,7 @@ const PlanImport = () => {
               milky:"",
               cut:"",
               pol:"",
-              sym:"",
+              sym:symDetails.find(item=>obj.grading==item.symName).original_name||"EXCELLENT",           //sym will get its value from grading generalization
               depth:""
               });
             }

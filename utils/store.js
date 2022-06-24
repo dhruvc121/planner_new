@@ -3,13 +3,15 @@ import { createContext, useReducer } from "react";
 export const Store=createContext()
 const initialState={
     plans:[],
-    master:[]
+    master:[],
+    user:{}
 };
 
 const reducer=(state,action)=>{
     switch(action.type){
         case "UPDATE_PLANS":    return {...state,plans:action.payload}
         case "MASTER":  return {...state,master:action.payload}
+        case 'SET_USER': return {...state,user:action.payload}
         default:return state;
     }
 }

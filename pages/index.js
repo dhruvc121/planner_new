@@ -1,7 +1,12 @@
-import PlanPage from "./plan_page";
+import React from 'react';
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router=useRouter()
+  React.useEffect(()=>{
+    router.push('/plan_page')
+  },[])
   return (
-    <PlanPage/>
+    <></>
   )
 }

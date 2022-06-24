@@ -45,6 +45,8 @@ const SelectFields=(props)=>{
 const InputModal=(props)=>{
 const {state,dispatch}=React.useContext(Store)
 const {master}=state
+
+//console.log(shapeDetail.find(obj=>props.rowData.shape==obj.shapename).original_name)
 const [input,setInput]=React.useState({
     purity:props.rowData.clarity||"",
     natts:props.rowData.fl||"",
@@ -52,13 +54,14 @@ const [input,setInput]=React.useState({
     flrc:props.rowData.flrc||"",
     tinch:props.rowData.tinch||"",
     milky:props.rowData.milky||"",
+    //shape:shapeDetail.find(obj=>props.rowData.shape==obj.shapename).original_name||"",
     shape:props.rowData.shape||"",
     rghwt:props.rowData.partroughwt||"",
     polwt:props.rowData.partpolishwt||"",
     diameter:props.rowData.diameter||"",
-    cut:"",
-    pol:"",
-    sym:"",
+    cut:props.rowData.cut||"",
+    pol:props.rowData.pol||"",
+    sym:props.rowData.sym||"",
     depth:"",
     ratio:props.rowData.ratio||"",
    })
@@ -71,6 +74,15 @@ const [input,setInput]=React.useState({
       delete update[props.id].data[props.rowData.id].rghwt
       dispatch({type:"UPDATE_PLANS",payload:update})
       props.setRowData({})
+      let ele=document.querySelector('.active')
+      console.log(ele)
+      ele.classList.remove('active')
+   }
+   const handleCancel=()=>{
+    props.setRowData({})
+    let ele=document.querySelector('.active')
+      //console.log(ele)
+      ele.classList.remove('active')
    }
     return  <div style={{
       position:"absolute",
@@ -94,11 +106,11 @@ const [input,setInput]=React.useState({
         <SelectFields input={input} setInput={setInput} title="pol" master={master}/>
         <SelectFields input={input} setInput={setInput} title="sym" master={master}/>
         <SelectFields input={input} setInput={setInput} title="depth" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="ratio" master={master}/>
+        <TextFields input={input} setInput={setInput} title="ratio" master={master}/>
       </div>
       <div className="d-flex-around" style={{marginTop:"20px"}}>
         <button onClick={()=>handleSubmit()}>ok</button>
-        <button onClick={()=>props.setRowData({})}>cancel</button>
+        <button onClick={()=>handleCancel()}>cancel</button>
       </div>
     </div>
 }

@@ -42,24 +42,26 @@ const UpperRight=()=>{
         <div className='d-flex'>
             <div name="grid1">
                 <table>
-                    <tr>
-                        <th>color/result/remark</th>
-                        <td>h-</td>
-                        <td>h+</td>
-                        <td>g</td>
-                    </tr>
-                    <tr>
-                        <th>flrc/remark</th>
-                        <td>light 002</td>
-                        <td></td>
-                        <td>none</td>
-                    </tr>
-                    <tr>
-                        <th>yl uv/8n tin/fanoy yl</th>
-                        <td></td>
-                        <td>n/a</td>
-                        <td></td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <th>color/result/remark</th>
+                            <td>h-</td>
+                            <td>h+</td>
+                            <td>g</td>
+                        </tr>
+                        <tr>
+                            <th>flrc/remark</th>
+                            <td>light 002</td>
+                            <td></td>
+                            <td>none</td>
+                        </tr>
+                        <tr>
+                            <th>yl uv/8n tin/fanoy yl</th>
+                            <td></td>
+                            <td>n/a</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
             <div name="grid2">
@@ -80,6 +82,7 @@ const UpperRight=()=>{
             </div>
             <div name="grid3">
                 <table>
+                <tbody>
                     <tr>
                         <th>tension</th>
                         <td>leopard high</td>
@@ -88,6 +91,7 @@ const UpperRight=()=>{
                         <th>allocation outstanding</th>
                         <td>392</td>
                     </tr>
+                </tbody>
                 </table>
             </div>
             <div name="some-details">
@@ -187,10 +191,10 @@ const PageHeader = () => {
         <div style={{backgroundColor:"#eee",padding:"5px",fontSize:"smaller"}}>
             <div className='d-flex-space' name="upper-section">
                 <div name="upper-left">
-                    <UpperLeft/>
+                    {<UpperLeft/>}
                 </div>
                 <div name="upper-right">
-                    <UpperRight/>
+                    {<UpperRight/>}
                 </div>
             </div>
             <div className='d-flex' name="lower-section">

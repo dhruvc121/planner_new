@@ -6,7 +6,7 @@ const handler=nc()
 handler.get(async(req,res)=>{
     try{
         const data=await pool.query("select * from master order by id,ordno")
-       console.log("call")
+       //console.log("call")
         res.send(data.rows)        
     }catch(err){
         console.log(err)
