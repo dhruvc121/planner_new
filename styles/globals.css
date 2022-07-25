@@ -35,6 +35,9 @@ table th {
   background-color: #04AA6D;
   color: white;
 }
+table td{
+  white-space: nowrap;
+}
 
 ul{
   padding: 0;

@@ -18,7 +18,7 @@ const Plan = ({plan}) => {
             <div style={{backgroundColor:"#eee",padding:"0.5rem"}}>
                 <PlanHeader id={plan.id}/>
             </div>
-            <div  style={{backgroundColor:"#eee",padding:"0.5rem"}}>
+            <div  style={{backgroundColor:"#eee",padding:"0.5rem", width:"100%", overflow:"auto"}}>
                 <PlanTable data={data} columns={columns} id={plan.id}/>
             </div>
         </div>

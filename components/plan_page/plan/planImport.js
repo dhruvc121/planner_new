@@ -7,7 +7,7 @@ const PlanImport = () => {
     const fileInput = React.useRef();
     const {state,dispatch}=React.useContext(Store)
    
-    const requiredcols=[{
+    const requiredcols=[{                 //these are the extra columns to be added
       field: "flrc",
     },{
       field: "tinch",
@@ -21,14 +21,39 @@ const PlanImport = () => {
       field: "sym",
     },{
       field: "depth",
-    }, 
+    },{
+      field: "cps",
+    },{
+      field: "-2",
+    },{
+      field: "-1",
+    },{
+      field: "+1",
+    },{
+      field: "+2",
+    },  
   ]
-  
+    
+  /* const addSumRow=(list)=>{
+    let newArr=[...list]
+    const getEmptyRow=()=>{
+      return row
+    }
+    list.map((row,index)=>{
+      
+      //when stone id change
+      const emptyRow=getEmptyRow()
+      //push this row to specific index
+      newArr.splice(index,0,emptyRow)
+    })
+  } */
+
+
     // process CSV data
     const processData = dataString => {
         const dataStringLines = dataString.split(/\r\n|\n/);
         const headers = dataStringLines[0].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
-    
+      //let count=1
         const list = [];
         for (let i = 1; i < dataStringLines.length; i++) {
           const row = dataStringLines[i].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
@@ -53,17 +78,91 @@ const PlanImport = () => {
                 }
               }
             }
-    
+            const getSymValue=()=>{
+              return symDetails.find(item=>obj.grading==item.symName).original_name||"EXCELLENT"
+            }
+            const getPolValue=(obj)=>{
+              /* if(count){
+                console.log(obj.partpolishwt,"0.69",obj.partpolishwt>0.33,obj.partpolishwt<0.69,"====================");
+                count--;
+              } */
+              const symmetry=getSymValue()
+              if(obj.shape=="ROUND"){         //for round shapes
+                console.log("if")
+                if(obj.partpolishwt<0.298){
+                  if(symmetry=="EXCELLENT" ){
+                    return "V. GOOD"
+                  }else if(symmetry=="V. GOOD"){
+                    return "V. GOOD"
+                  }
+                }else if(obj.partpolishwt>=0.298 && obj.partpolishwt<0.698){
+                  if(symmetry=="EXCELLENT" ){
+                    return "EXCELLENT"
+                  }else if(symmetry=="V. GOOD"){
+                    return "V. GOOD"
+                  }
+                }else if(obj.partpolishwt>=0.698){
+                  if(symmetry=="EXCELLENT" ){
+                    return "EXCELLENT"
+                  }else if(symmetry=="V. GOOD"){
+                    return "EXCELLENT"
+                  }                  
+                }
+              }
+              else{           //for fancy shapes
+                console.log("else")
+                if(obj.partpolishwt<0.298){
+                  if(symmetry=="EXCELLENT" ){
+                    return "V. GOOD"
+                  }else if(symmetry=="V. GOOD"){
+                    return "V. GOOD"
+                  }
+                }else if(obj.partpolishwt>=0.298 && obj.partpolishwt<0.698){
+                  if(symmetry=="EXCELLENT" ){
+                    return "EXCELLENT"
+                  }else if(symmetry=="V. GOOD"){
+                    return "V. GOOD"
+                  }
+                }else if(obj.partpolishwt>=0.698){
+                  if(symmetry=="EXCELLENT" ){
+                    return "EXCELLENT"
+                  }else if(symmetry=="V. GOOD"){
+                    return "EXCELLENT"
+                  }                  
+                }
+              }
+            }
+            const getCutValue=(obj)=>{
+              if(obj.shape!="ROUND"){
+                if(obj.grading.match("KP PRM") || obj.grading.match("KP-PRM")){
+                  return "EXCELLENT"
+                }else if(obj.grading.match("KP STD") || obj.grading.match("KP-STD") || obj.grading.match("KPSTD" || obj.grading.match("KP-std"))){
+                  return "V. GOOD"
+                }else if(obj.grading.match("KP DISC") || obj.grading.match("KP-DISC") || obj.grading.match("KP DISCOUNT") || obj.grading.match("KP-DISCOUNT") || obj.grading.match("KP- DISCOUNT")){
+                  return "GOOD"
+                }
+              }else{
+                return ""
+              }
+            }
+
+
             // remove the blank rows
             if (Object.values(obj).filter(x => x).length > 0) {
               list.push({...obj,
+              id:parseInt(obj.id)+1,
               flrc:"",
               tinch:"",
               milky:"",
-              cut:"",
-              pol:"",
-              sym:symDetails.find(item=>obj.grading==item.symName).original_name||"EXCELLENT",           //sym will get its value from grading generalization
-              depth:""
+              cut:getCutValue(obj),
+              pol:getPolValue(obj),
+              sym: getSymValue(),           //sym will get its value from grading generalization
+              depth:"",
+              cps:"",
+              ['-2']:"",
+              ['-1']:"",
+              ['+1']:"",
+              ['+2']:"",
               });
             }
           }
@@ -73,8 +172,9 @@ const PlanImport = () => {
           field: c.toLowerCase().trim(), 
         }));
 
+        //addSumRow(list)
         dispatch({type:"UPDATE_PLANS",payload:[...state.plans,{id:state.plans.length,data:list,columns:[...columns,...requiredcols]}]})
-      //  console.log({data:list,columns:columns})
+        
       }
       // handle file upload
       const handleFileUpload = e => {

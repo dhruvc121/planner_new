@@ -45,6 +45,16 @@ const SelectFields=(props)=>{
 const InputModal=(props)=>{
 const {state,dispatch}=React.useContext(Store)
 const {master}=state
+const {posY}=props
+const style={
+      
+      position:"absolute",
+      top:`${posY}px`,
+      width:"90%",
+      height:"300px",
+      backgroundColor:"#eee",
+      border:"1px solid black",
+}
 
 //console.log(shapeDetail.find(obj=>props.rowData.shape==obj.shapename).original_name)
 const [input,setInput]=React.useState({
@@ -67,11 +77,13 @@ const [input,setInput]=React.useState({
    })
    const handleSubmit=()=>{
       let update=[...state.plans] 
-      update[props.id].data.splice(props.rowData.id,1,{...props.rowData,...input,clarity:input.purity,partroughwt:input.rghwt,partpolishwt:input.polwt,fl:input.natts})  
-      delete update[props.id].data[props.rowData.id].natts
-      delete update[props.id].data[props.rowData.id].purity
-      delete update[props.id].data[props.rowData.id].polwt
-      delete update[props.id].data[props.rowData.id].rghwt
+      console.log(props.rowData.id)
+      update[props.id].data.splice(props.rowData.index,1,{...props.rowData,...input,clarity:input.purity,partroughwt:input.rghwt,partpolishwt:input.polwt,fl:input.natts})  
+      if(update[props.id].data[props.rowData.index])  delete update[props.id].data[props.rowData.index].natts;
+      if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].purity;
+      if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].polwt;
+      if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].rghwt;
+      if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].index;
       dispatch({type:"UPDATE_PLANS",payload:update})
       props.setRowData({})
       let ele=document.querySelector('.active')
@@ -81,16 +93,9 @@ const [input,setInput]=React.useState({
    const handleCancel=()=>{
     props.setRowData({})
     let ele=document.querySelector('.active')
-      //console.log(ele)
-      ele.classList.remove('active')
+    ele.classList.remove('active')
    }
-    return  <div style={{
-      position:"absolute",
-      width:"90%",
-      height:"300px",
-      backgroundColor:"#eee",
-      border:"1px solid black",
-    }}>
+    return  <div style={style}>
       <div style={{display:"flex"}}>
         <SelectFields input={input} setInput={setInput} title="purity" master={master}/>
         <SelectFields input={input} setInput={setInput} title="natts" master={master}/>

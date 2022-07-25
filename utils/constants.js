@@ -126,6 +126,7 @@ export const shapeDetail=[
   ,{shapename:'WHITE CUSHION', original_name:'CUSHION CUT'}
   ,{shapename:'CUSHION-2', original_name:'CUSHION CUT'}
   ,{shapename:'CUSHION_03 KP', original_name:'CUSHION-3'}
+  ,{shapename:'EMERALD 4STEP',original_name:'EMRALD'}
   ]
 
 export const symDetails=[

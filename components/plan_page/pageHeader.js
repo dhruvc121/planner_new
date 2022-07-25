@@ -117,10 +117,10 @@ const LowerLeft=({master})=>{
         <div className='d-flex'>
             <label>color</label>
             <select>
-                <option value="select">select</option>
+                <option value="select" key={-1}>select</option>
                 {
                     master.map((menuItem,index)=>{
-                        return menuItem.mastertype=="color"?<option>{menuItem.displayname}</option>:null
+                        return menuItem.mastertype=="color"?<option key={index}>{menuItem.displayname}</option>:null
                     })
                 }
             </select>
@@ -128,10 +128,10 @@ const LowerLeft=({master})=>{
         <div className='d-flex'>
             <label>flrc</label>
             <select>
-                <option value="select">select</option>
+                <option value="select" key={-1}>select</option>
                 {
                     master.map((menuItem,index)=>{
-                        return menuItem.mastertype=="flrc"?<option>{menuItem.displayname}</option>:null
+                        return menuItem.mastertype=="flrc"?<option key={index}>{menuItem.displayname}</option>:null
                     })
                 }
             </select>
@@ -139,10 +139,10 @@ const LowerLeft=({master})=>{
         <div className='d-flex'>
             <label>tinch</label>
             <select>
-                <option value="select">select</option>
+                <option value="select" key={-1}>select</option>
                 {
                     master.map((menuItem,index)=>{
-                        return menuItem.mastertype=="tinch"?<option>{menuItem.displayname}</option>:null
+                        return menuItem.mastertype=="tinch"?<option key={index}>{menuItem.displayname}</option>:null
                     })
                 }
             </select>

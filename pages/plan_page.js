@@ -19,6 +19,7 @@ const PlanPage = () => {
             dispatch({type:"MASTER",payload:data})
         }
         getMasterData()
+        console.log(state.user)
     },[])
     return (
         <div>
