@@ -3,7 +3,7 @@ import { Store } from '../../utils/store'
 import PlanHeader from './plan/planHeader'
 import PlanTable from './plan/planTable'
 
-const Plan = ({plan}) => {
+const Plan = ({plan,colStatus}) => {
     const {state,dispatch}=React.useContext(Store)
     const {data,columns}=plan
     
@@ -16,10 +16,10 @@ const Plan = ({plan}) => {
         <div> 
         <button  onClick={()=>removePlan(plan.id)} size="small" style={{margin:"0 1rem"}}>Clear</button>
             <div style={{backgroundColor:"#eee",padding:"0.5rem"}}>
-                <PlanHeader id={plan.id}/>
+                <PlanHeader data={data} columns={columns} id={plan.id}/>
             </div>
             <div  style={{backgroundColor:"#eee",padding:"0.5rem", width:"100%", overflow:"auto"}}>
-                <PlanTable data={data} columns={columns} id={plan.id}/>
+                <PlanTable data={data} columns={columns} id={plan.id} colStatus={colStatus}/>
             </div>
         </div>
     );

@@ -57,6 +57,19 @@ const Planheader = (props) => {
         }]})
         
     }
+    const getEmptyRow=()=>{
+        let row={}
+        props.columns.map((title)=> row[title.field]="")
+        row.id=props.data[props.data.length-1].id + 1
+        row['stone id']=props.data[props.data.length-1]['stone id']
+        return row
+    }
+    const createStone=(id)=>{
+        let update=[...state.plans]
+        const emptyRow=getEmptyRow()
+        update[id].data=[...update[id].data,emptyRow]
+        dispatch({type:"UPDATE_PLANS",payload:update})
+    }
     return (
         <div className='d-flex-space' style={{fontSize:"12px",height:"2rem"}}>
             <div name="party-name">
@@ -73,10 +86,11 @@ const Planheader = (props) => {
                 </div>
             </div>
             <div className='d-flex' name="file-operations">
-                <button>save</button>
-                <button>file</button>
-                <button>recheck</button>
-                <button onClick={()=>clone(props.id)}>clone plan</button>
+                <button onClick={()=>createStone(props.id)}>Create Stone</button>
+                <button>Save</button>
+                <button>File</button>
+                <button>Recheck</button>
+                <button onClick={()=>clone(props.id)}>Clone Plan</button>
             </div>
             <div className='d-flex' name="crown-revie-select">
                 <input type={'checkbox'}/>

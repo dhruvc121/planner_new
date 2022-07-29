@@ -76,3 +76,6 @@ p{
 .active{
   background-color: cyan!important;
 }
+.context-menu-item:hover{
+  background-color: #eee;
+}

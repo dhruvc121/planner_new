@@ -1,63 +1,111 @@
 import React from 'react';
-import { Store } from '../../utils/store';
+import axios from 'axios'
 
 const ColumnSelector = () => {
-    const {state}=React.useContext(Store)
     const [selectedCols,setSelectedCols]=React.useState([])
-    const colList=[
-        {field: 'id'},
-{field: 'stone id'},
-{field: 'fl'},
-{field: 'username'},
-{field: 'totalr.wt'},
-{field: 'partroughwt'},
-{field: 'partpolishwt'},
-{field: 'diameter'},
-{field: 'ratio'},
-{field: 'grading'},
-{field: 'clarity'},
-{field: 'color'},
-{field: 'shape'},
-{field: 'td%'},
-{field: 'tdmm'},
-{field: 'table%'},
-{field: 'pavilangle'},
-{field: 'crownangle'},
-{field: 'crownheight'},
-{field: 'length'},
-{field: 'width'},
-{field: 'flrc'},
-{field: 'tinch'},
-{field: 'milky'},
-{field: 'cut'},
-{field: 'pol'},
-{field: 'sym'},
-{field: 'depth'},
-{field: 'cps'},
-{field: '-2'},
-{field: '-1'},
-{field: '+1'},
-{field: '+2'},
-    ]
-
-
-
-    const handleChange=(colName)=>{
-        setSelectedCols([...selectedCols,colName])
+    React.useEffect(()=>{
+        getColName()
+    },[])
+    const getColName=async()=>{
+        try{
+            const data=await axios.get('/api/columnmasterdata')
+            setSelectedCols(data.data.rows)   
+        }catch(err){
+            console.log(err)
+            window.alert("Fetch data failed!")
+        }
     }
+    //console.log(selectedCols)
+    const handleChange=async(colId)=>{
+        try{
+            let update=[...selectedCols]
+            await axios.put('/api/columnmasterdata',{id:colId})
+            update=update.map((col)=>{
+                if(col.id==colId){
+                    //console.log("here",col.id,colId,col,{...col,status:!col.status})
+                    return col.status?{...col,status:false}:{...col,status:true}
+                }else{
+                    //console.log("eles")
+                    return col
+                }
+            })
+            //console.log(update)
+            setSelectedCols(update)
+        }catch(err){
+            window.alert('Column status update failed')
+            getColName()
+        }
+    }
+   //console.log(selectedCols)
     return (
-        <div>
-            {
-                colList.map((col,index)=>{
-                    return <div className='select-col-container' key={index}>
-                        <label>{col.field}</label>
-                        <input type="checkbox" value={col.field} onChange={(e)=>handleChange(e.target.value)}/>
+        <div className='container' style={styles.container}>
+            <h4>Column Selector Master</h4>
+            <hr/>
+            <div className='user-permissions-container' style={styles.userPermissionContainer}>
+                    <h5>User Permissions:</h5>
+                    <div className='table-container' style={styles.tableContainer}>
+                        <table style={styles.table}>
+                            <thead>
+                                <tr>
+                                    <td>Column Name</td>
+                                    <td>Status</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    selectedCols.map((colname,index)=>{
+                                        return <tr key={index}>
+                                            <td>{colname.col_name}</td>
+                                            <td><input type="checkbox" value={colname.id} checked={colname.status} onChange={(e)=>handleChange(e.target.value)}/></td>
+                                        </tr>
+                                    })
+                                }
+                            </tbody>
+                        </table>
                     </div>
-                })
-            }
-            <div>{`${selectedCols} `}</div>        
+            </div>
         </div>
     );
+}
+
+
+const styles={
+    container:{
+        minHeight:"100vh",
+        position:" absolute",
+        top:" 50%",
+        left:" 50%",
+        transform:" translate(-50%, -50%)",
+        width:" 100%",
+        maxWidth:"1300px",
+        background:" aliceblue",
+        display:" flex",
+        flexDirection:" column",
+        alignItems:" center",
+    },
+    userSelectionContainer:{
+        width:" 50%",
+        backgroundColor:" antiquewhite",
+        display:" flex",
+        justifyContent:" space-around",
+        alignItems:"center"
+    },
+    userPermissionContainer:{
+        width:"50%",
+    },
+    tableContainer:{
+        maxHeight:" 400px",
+        overflow:" auto",
+        width:"100%",
+    },
+    table:{
+        width:"100%"
+    },
+    button:{
+        marginTop:" 1rem",
+        width:" 100%",
+        padding:" 0.5rem",
+    }
 }
 
 export default ColumnSelector;
