@@ -56,7 +56,7 @@ const PlanTable = ({data,columns,id}) => {
             addSubStone(e,planId,index)
         //if new stone
     } */
-    const handleRightClick=(e,planId,index)=>{
+    const handleRightClick=(e)=>{
         e.preventDefault()
         const planId=e.target.parentElement.attributes.id.value
         const index=e.target.parentElement.attributes.data.value
