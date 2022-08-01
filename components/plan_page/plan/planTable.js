@@ -2,15 +2,51 @@ import React from 'react';
 import { Store } from '../../../utils/store';
 import InputModal from './inputModal';
 
-/* export const ContextMenu=()=>{
-    return  <div className='context-menu-container' style={{...styles.contextMenuContainer,display:showMenu?'flex':"none"}}>
+export const ContextMenu=({showMenu,setShowMenu,eventData,columns,state,dispatch})=>{
+    const x=eventData.pageX
+    const y=eventData.pageY
+    const createEmptyRow=()=>{
+        let row={}
+        columns.map((title)=> row[title.field]="")
+        return row
+      }    
+    const addSubStone=()=>{
+        console.log("2")
+        const planId=eventData.target.parentElement.attributes.id.value
+        const index=eventData.target.parentElement.attributes.data.value
+           
+        let emptyRow=createEmptyRow()
+        let newData=[...state.plans[planId].data]
+        newData.splice(parseInt(index)+1,0,{...emptyRow,id:state.plans[planId].data[index].id,['stone id']:state.plans[planId].data[index]['stone id']})
+        const updatedPlans=state.plans.map((plan)=>{return plan.id==eventData.target.parentElement.id?{...plan,data:newData}:plan})
+        dispatch({type:"UPDATE_PLANS",payload:updatedPlans})
+        setShowMenu(false)
+    }
+    /* const getEmptyRow=()=>{
+        let row={}
+        props.columns.map((title)=> row[title.field]="")
+        row.id=props.data[props.data.length-1].id + 1
+        row['stone id']=props.data[props.data.length-1]['stone id']
+        return row
+    } */
+    const createStone=(id)=>{
+        let update=[...state.plans]
+        let emptyRow=createEmptyRow()
+        const{data}=update[id]
+        emptyRow.id=data[data.length-1].id + 1
+        emptyRow['stone id']=data[data.length-1]['stone id']
+        update[id].data=[...update[id].data,emptyRow]
+        dispatch({type:"UPDATE_PLANS",payload:update})
+        setShowMenu(false)
+    }
+    return  <div className='context-menu-container' style={{...styles.contextMenuContainer,top:y,left:x,display:showMenu?'flex':"none"}}>
     <ul className='context-menu' style={styles.contextMenu}>
-        <li className='context-menu-item' style={styles.contextMenuItem}>Add Sub stone</li>
-        <li className='context-menu-item' style={styles.contextMenuItem}>Add New Stone</li>
+        <li className='context-menu-item' style={styles.contextMenuItem} onClick={addSubStone}>Add Sub stone</li>
+        <li className='context-menu-item' style={styles.contextMenuItem} onClick={()=>createStone(parseInt(eventData.target.parentElement.attributes.id.value))}>Add New Stone</li>        {/* onclick call createstone */}
         <li className='context-menu-item' style={styles.contextMenuItem} onClick={()=>setShowMenu(false)}>Cancel</li>
     </ul>
 </div>
-} */
+}
 
 
 const PlanTable = ({data,columns,id}) => {
@@ -18,7 +54,8 @@ const PlanTable = ({data,columns,id}) => {
     const {colStatus}=state
     const[posY,setPosY]=React.useState(0)
     const [rowData,setRowData]=React.useState({})
-    /* const [showMenu,setShowMenu]=React.useState(false) */
+    const [showMenu,setShowMenu]=React.useState(false)
+    const [eventData,setEventData]=React.useState({})
     let prevId=-1
     const getSum=(col,id)=>{
         let sum=0;
@@ -58,14 +95,17 @@ const PlanTable = ({data,columns,id}) => {
     } */
     const handleRightClick=(e)=>{
         e.preventDefault()
-        const planId=e.target.parentElement.attributes.id.value
+        console.log("1")
+        setEventData({...e})
+        setShowMenu(true)
+        /* const planId=e.target.parentElement.attributes.id.value
         const index=e.target.parentElement.attributes.data.value
            
         let emptyRow=createEmptyRow()
         let newData=[...state.plans[planId].data]
         newData.splice(parseInt(index)+1,0,{...emptyRow,id:state.plans[planId].data[index].id,['stone id']:state.plans[planId].data[index]['stone id']})
         const updatedPlans=state.plans.map((plan)=>{return plan.id==e.target.parentElement.id?{...plan,data:newData}:plan})
-        dispatch({type:"UPDATE_PLANS",payload:updatedPlans})
+        dispatch({type:"UPDATE_PLANS",payload:updatedPlans}) */
     }
     const handleClick=(e,row,index)=>{
        e.target.parentElement.className="active"
@@ -197,9 +237,9 @@ const PlanTable = ({data,columns,id}) => {
                 <InputModal id={id} rowData={rowData} setRowData={setRowData} posY={posY}/> //rowData has the index of the row to be updated
             }
             {
-             /*    showMenu &&
-                <ContextMenu data={data}/>
-              */   
+                showMenu && eventData &&
+                <ContextMenu showMenu={showMenu} setShowMenu={setShowMenu} eventData={eventData} state={state} dispatch={dispatch} columns={columns}/>
+                
             }
         </div>
     );
@@ -214,6 +254,7 @@ const styles={
         width:" 100%",
         maxWidth:" 100px",
         padding:"1px 5px",
+        position:"absolute",
     },
     contextMenu:{
         listStyleType: "none",
@@ -223,193 +264,4 @@ const styles={
         margin:"3px 0",
         cursor:"pointer",
     }
-}
-{/* 
-data.map((row,index)=>{
-                                if((prevId==-1 || prevId==row.id) && index!=data.length-1){
-                                    prevId==-1?prevId=row.id:prevId
-                                    return <tr key={index} data={index} id={id} onContextMenu={(e)=>handleRightClick(e)} onClick={(e)=>handleClick(e,row)} style={{cursor:"pointer"}}>
-                                    {
-                                        Object.keys(row).map((cell,index)=>{
-                                            return <td>
-                                                {row[cell]}
-                                            </td> 
-                                        })
-                                    }
-                                    </tr>
-                                }else{
-                                    prevId=row.id
-                                    return <React.Fragment>
-                                        <tr>
-                                        {
-                                            columns.map((col)=>{
-                                                return <td>
-                                                    {getSum(col.field,row.id-1)}
-                                                </td> 
-                                            })
-                                        }
-                                        </tr>
-                                        <tr key={index} id={id} data={index} onContextMenu={(e)=>handleRightClick(e)} onClick={(e)=>handleClick(e,row)} style={{cursor:"pointer"}}>
-                                        {
-                                            Object.keys(row).map((cell,index)=>{
-                                                return <td>
-                                                    {row[cell]}
-                                                </td> 
-                                            })
-                                        }
-                                        </tr>
-                                        {
-                                            index==data.length-1 &&
-                                            <tr>
-                                            {
-                                                columns.map((col)=>{
-                                                    return <td>
-                                                        {getSum(col.field,row.id)}
-                                                    </td> 
-                                                })
-                                            }
-                                            </tr>
-                                        }
-                                    </React.Fragment>
-                                }
-                            })
-*/}
-
-{
-    /* 
-    data.map((tableRow,index)=>{
-                                if(true){
-                                    return <tr key={index} onClick={(e)=>handleClick(e,tableRow,index)} onContextMenu={handleRightClick} data={index} id={id}>
-                                        {
-                                            Object.keys(tableRow).map((cell,index)=>{
-                                                return <td>
-                                                    {tableRow[cell]}
-                                                </td> 
-                                            })
-                                        }
-                                    </tr>
-                                }else{
-                                    return <tr key=""></tr>
-                                }
-                            })
-     */
-}
-
-{
-    /* 
-        
-    {
-                            data.map((tableRow,index)=>{
-                                if((prevId==-1 || prevId==tableRow.id) && index!=data.length-1){
-                                    prevId==-1?prevId=tableRow.id:prevId
-                                    return <tr key={index} onClick={(e)=>handleClick(e,tableRow,index)} onContextMenu={(e)=>handleRightClick(e,tableRow,index)} data={index} id={id}>
-                                        {
-                                            Object.keys(tableRow).map((cell,index)=>{
-                                                return <td key={index}>
-                                                    {tableRow[cell]}
-                                                </td> 
-                                            })
-                                        }
-                                    </tr>
-                                }else if(index==data.length-1){
-                                    return <React.Fragment>
-                                        <tr key={index} id={id} data={index} onContextMenu={(e)=>handleRightClick(e)} onClick={(e)=>handleClick(e,tableRow,index)} style={{cursor:"pointer"}}>
-                                        {
-                                            Object.keys(tableRow).map((cell,index)=>{
-                                                return <td key={index}>
-                                                    {tableRow[cell]}
-                                                </td> 
-                                            })
-                                        }
-                                        </tr>
-                                        <tr>
-                                        {
-                                            columns.map((col,index)=>{
-                                                //================== sum proper nahi hai================
-                                                return <td key={index}>
-                                                    {getSum(col.field,tableRow.id)}    
-                                                </td> 
-                                            })
-                                        }
-                                        </tr>
-                                    </React.Fragment>
-                                }else{  
-                                    prevId=tableRow.id
-                                    return <React.Fragment>
-                                        <tr>
-                                        {
-                                            columns.map((col,index)=>{
-                                                return <td key={index}>
-                                                    {getSum(col.field,tableRow.id-1)}
-                                                </td> 
-                                            })
-                                        }
-                                        </tr>
-                                        <tr key={index} id={id} data={index} onContextMenu={(e)=>handleRightClick(e)} onClick={(e)=>handleClick(e,tableRow,index)} style={{cursor:"pointer"}}>
-                                        {
-                                            Object.keys(tableRow).map((cell,index)=>{
-                                                return <td key={index}>
-                                                    {tableRow[cell]}
-                                                </td> 
-                                            })
-                                        }
-                                        </tr>
-                                    </React.Fragment>
-                                }
-                            })
-                        }
-
-    */
-}
-
-{
-    /* if((prevId==-1 || prevId==row.id) && index!=data.length-1){
-                                    prevId==-1?prevId=row.id:prevId
-                                    return <tr key={index} data={index} id={id} onContextMenu={(e)=>handleRightClick(e)} onClick={(e)=>handleClick(e,row,index)} style={{cursor:"pointer"}}>
-                                    {
-                                        Object.keys(row).map((cell,index)=>{
-                                            return <td>
-                                                {row[cell]}
-                                            </td> 
-                                        })
-                                    }
-                                    </tr>
-                                }else{
-                                    prevId=row.id
-                                    return <React.Fragment>
-                                        {
-                                            index!=data.length-1 &&
-                                            <tr>
-                                            {
-                                                columns.map((col)=>{
-                                                    return <td>
-                                                        {getSum(col.field,row.id-1)}
-                                                    </td> 
-                                                })
-                                            }
-                                            </tr>
-                                        }
-                                        <tr key={index} id={id} data={index} onContextMenu={(e)=>handleRightClick(e)} onClick={(e)=>handleClick(e,row)} style={{cursor:"pointer"}}>
-                                        {
-                                            Object.keys(row).map((cell,index)=>{
-                                                return <td>
-                                                    {row[cell]}
-                                                </td> 
-                                            })
-                                        }
-                                        </tr>
-                                        {
-                                            index==data.length-1 &&
-                                            <tr>
-                                            {
-                                                columns.map((col)=>{
-                                                    return <td>
-                                                        {getSum(col.field,row.id)}
-                                                    </td> 
-                                                })
-                                            }
-                                            </tr>
-                                        }
-                                    </React.Fragment>
-                                } */
 }
