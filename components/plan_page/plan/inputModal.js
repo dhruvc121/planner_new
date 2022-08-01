@@ -44,10 +44,9 @@ const SelectFields=(props)=>{
 
 const InputModal=(props)=>{
 const {state,dispatch}=React.useContext(Store)
-const {master}=state
+const {master,colStatus}=state
 const {posY}=props
 const style={
-      
       position:"absolute",
       top:`${posY}px`,
       width:"90%",
@@ -55,6 +54,24 @@ const style={
       backgroundColor:"#eee",
       border:"1px solid black",
 }
+//console.log("========",colStatus)
+const titleList=[
+  {title:"purity",type:"select"},
+{title:"natts",type:"select"},
+{title:"color",type:"select"},
+{title:"flrc",type:"select"},
+{title:"tinch",type:"select"},
+{title:"milky",type:"select"},
+{title:"shape",type:"select"},
+{title:"rghwt",type:"text"},
+{title:"polwt",type:"text"},
+{title:"diameter",type:"text"},
+{title:"cut",type:"select"},
+{title:"pol",type:"select"},
+{title:"sym",type:"select"},
+{title:"depth",type:"select"},
+{title:"ratio",type:"text"},
+]
 
 //console.log(shapeDetail.find(obj=>props.rowData.shape==obj.shapename).original_name)
 const [input,setInput]=React.useState({
@@ -97,12 +114,12 @@ const [input,setInput]=React.useState({
    }
     return  <div style={style}>
       <div style={{display:"flex"}}>
-        <SelectFields input={input} setInput={setInput} title="purity" master={master}/>
+        {/* <SelectFields input={input} setInput={setInput} title="purity" master={master}/>
         <SelectFields input={input} setInput={setInput} title="natts" master={master}/>
         <SelectFields input={input} setInput={setInput} title="color" master={master}/>
         <SelectFields input={input} setInput={setInput} title="flrc" master={master}/>
         <SelectFields input={input} setInput={setInput} title="tinch" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="milky" master={master}/>   {/* change mtype to milky in db */}
+        <SelectFields input={input} setInput={setInput} title="milky" master={master}/>  
         <SelectFields input={input} setInput={setInput} title="shape" master={master}/>
         <TextFields input={input} setInput={setInput} title="rghwt" master={master}/>
         <TextFields input={input} setInput={setInput} title="polwt" master={master}/>
@@ -111,7 +128,22 @@ const [input,setInput]=React.useState({
         <SelectFields input={input} setInput={setInput} title="pol" master={master}/>
         <SelectFields input={input} setInput={setInput} title="sym" master={master}/>
         <SelectFields input={input} setInput={setInput} title="depth" master={master}/>
-        <TextFields input={input} setInput={setInput} title="ratio" master={master}/>
+        <TextFields input={input} setInput={setInput} title="ratio" master={master}/> */}
+        {
+          titleList.map((title,index)=>{
+            if(title.type=="select"){
+              let colIndex=colStatus.findIndex((cols)=>cols.col_name==title.title)
+              if(colIndex!=-1 && colStatus[colIndex].status){
+                return <SelectFields key={index} input={input} setInput={setInput} title={title.title} master={master}/>
+              }
+            }else{
+              let colIndex=colStatus.findIndex((cols)=>cols.col_name==title.title)
+              if(colIndex!=-1 && colStatus[colIndex].status){
+                return <TextFields key={index} input={input} setInput={setInput} title={title.title} master={master}/>
+              }
+            }
+          })
+        }
       </div>
       <div className="d-flex-around" style={{marginTop:"20px"}}>
         <button onClick={()=>handleSubmit()}>ok</button>
@@ -120,3 +152,4 @@ const [input,setInput]=React.useState({
     </div>
 }
 export default InputModal;
+ {/* change mtype to milky in db */}
