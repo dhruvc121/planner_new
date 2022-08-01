@@ -12,6 +12,9 @@ const PlanPage = () => {
     const {plans}=state
     const router=useRouter()
     React.useEffect(()=>{
+        if(!state.user.id){
+            router.push('/login')
+        }
         const getMasterData=async()=>{
             const {data}=await axios.get('/api/masterdata')
             dispatch({type:"MASTER",payload:data})
