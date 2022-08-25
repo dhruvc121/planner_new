@@ -24,11 +24,19 @@ const Home = () => {
             <br/>
             <h3>Pages</h3>
             <hr style={{width:"100%"}}/>
+            <div className='pages-container' style={styles.pagesContainer}>
             <div className="card-container" onClick={()=>router.push('/plan_page')} style={styles.cardContainer}>
                 <img src="https://placeholder.pics/svg/75" alt="placeholder" />
                 <div className='card-body' style={styles.cardBody}>
                     <h5>Plan Page</h5>
                 </div>
+            </div>
+            <div className="card-container" onClick={()=>router.push('/allocation_page')} style={styles.cardContainer}>
+                <img src="https://placeholder.pics/svg/75" alt="placeholder" />
+                <div className='card-body' style={styles.cardBody}>
+                    <h5>Allocation Page</h5>
+                </div>
+            </div>
             </div>
         </div>
     );
@@ -37,16 +45,16 @@ const Home = () => {
 const styles={
     container:{
         maxWidth:" 1300px",
-    width:" 100%",
-    position:" absolute",
-    top:" 50%",
-    left:" 50%",
-    transform:" translate(-50%, -50%)",
-    minHeight:" 100vh",
-    display:" flex",
-    flexDirection:" column",
-    alignItems:" flex-start",
-    justifyContent:" flex-start",
+        width:" 100%",
+        position:" absolute",
+        top:" 50%",
+        left:" 50%",
+        transform:" translate(-50%, -50%)",
+        minHeight:" 100vh",
+        display:" flex",
+        flexDirection:" column",
+        alignItems:" flex-start",
+        justifyContent:" flex-start",
     },
     cardContainer:{
         display:" flex",
@@ -60,7 +68,13 @@ const styles={
         width:" 100%",
         display:" flex",
         justifyContent:" center",
+    },
+    pagesContainer:{
+        width:"100%",
+        display:"flex",
+        alignItems:"center",
     }
+
     
 
 }

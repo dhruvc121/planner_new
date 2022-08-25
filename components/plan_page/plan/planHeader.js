@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import { Store } from '../../../utils/store';
 
@@ -70,6 +71,20 @@ const Planheader = (props) => {
         update[id].data=[...update[id].data,emptyRow]
         dispatch({type:"UPDATE_PLANS",payload:update})
     }
+    const savePlan=async(id)=>{
+        try{
+            let plan=state.plans[id].data
+            //console.log(plan.data)
+            const planJSON=JSON.stringify(plan)
+            const res=await axios.post('/api/plan/saveplan',{plan:planJSON})
+            window.alert("table saved")
+        }catch(e){
+            window.alert("Something went wrong!!")
+            console.log('this went wrong!!->',e)
+        }
+        
+        //console.log(res)
+    }
     return (
         <div className='d-flex-space' style={{fontSize:"12px",height:"2rem"}}>
             <div name="party-name">
@@ -87,7 +102,7 @@ const Planheader = (props) => {
             </div>
             <div className='d-flex' name="file-operations">
                 <button onClick={()=>createStone(props.id)}>Create Stone</button>
-                <button>Save</button>
+                <button onClick={()=>savePlan(props.id)}>Save</button>
                 <button>File</button>
                 <button>Recheck</button>
                 <button onClick={()=>clone(props.id)}>Clone Plan</button>

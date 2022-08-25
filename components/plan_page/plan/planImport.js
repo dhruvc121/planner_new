@@ -140,6 +140,8 @@ const PlanImport = () => {
                   return "V. GOOD"
                 }else if(obj.grading.match("KP DISC") || obj.grading.match("KP-DISC") || obj.grading.match("KP DISCOUNT") || obj.grading.match("KP-DISCOUNT") || obj.grading.match("KP- DISCOUNT")){
                   return "GOOD"
+                }else{
+                  return ""
                 }
               }else{
                 return ""

@@ -188,7 +188,7 @@ const PageHeader = () => {
     const {state,dispatch}=React.useContext(Store)
     const {master}=state
     return (
-        <div style={{backgroundColor:"#eee",padding:"5px",fontSize:"smaller"}}>
+        <div style={{backgroundColor:"#eee",padding:"5px",fontSize:"smaller",marginBottom:"1rem"}}>
             <div className='d-flex-space' name="upper-section">
                 <div name="upper-left">
                     {<UpperLeft/>}

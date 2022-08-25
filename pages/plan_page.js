@@ -33,7 +33,7 @@ const PlanPage = () => {
         getColStatus()
         console.log(state.user)
     },[])
-    //console.log(colStatus)
+    console.log(state.plans)
     return (
         <div>
         <PlanImport/>
