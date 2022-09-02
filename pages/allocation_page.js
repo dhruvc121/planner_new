@@ -4,55 +4,103 @@ import PartyTable from '../components/allocation_page/partyTable';
 import PageHeader from '../components/plan_page/pageHeader';
 
 const AllocationPage = () => {
-    const [data,setData]=React.useState([])
+    const [rows,setRows]=React.useState([])
     const [columns,setColumns]=React.useState([])
+    const requiredParams={
+        'top opens':"",
+'bot opens':"",
+'lab':"",
+'shade range':"",
+'pointer range':"",
+'assort':"",
+'trend':"",
+'price':"",
+'value':"",
+'labour':"",
+'net value':"",
+'net value%':"",
+'reminder':"",
+'remark':"",
+    }
+    const hideCols=['id',
+    'stone id',
+    'username',
+    'totalr.wt',
+    'diameter',
+    'td%',
+    'tdmm',
+    'table%',
+    'pavilangle',
+    'crownangle',
+    'crownHeight',
+    'length',
+    'width',
+    'cps']
     React.useEffect(()=>{
-       // window.alert("1")
         getData()
-        //window.alert("5")
     },[])
+    const addRequiredCols=(data)=>{
+        let update=[...data]
+        update=update.map(row=>{ return {...row,...requiredParams}})
+        setRows(update)
+    }
+    const processRows=(tblRows)=>{
+        let update=[...tblRows]
+
+    }
     const getData=async()=>{
-        const {data}=await axios.get('/api/allocation/getallocationdata')
-        //console.log(data)
-      //  window.alert("2")
-        setData(data)
-        //window.alert("3")
+        const {data}=await axios.get('/api/allocation/getallocationdata')  
         setColumns([
-            {field: 'id'}
-            ,{field: 'stone id'}
-            ,{field: 'fl'}
-            ,{field: 'username'}
-            ,{field: 'totalr.wt'}
-            ,{field: 'partroughwt'}
-            ,{field: 'partpolishwt'}
-            ,{field: 'diameter'}
-            ,{field: 'ratio'}
-            ,{field: 'grading'}
-            ,{field: 'clarity'}
-            ,{field: 'color'}
-            ,{field: 'shape'}
-            ,{field: 'td%'}
-            ,{field: 'tdmm'}
-            ,{field: 'table%'}
-            ,{field: 'pavilangle'}
-            ,{field: 'crownangle'}
-            ,{field: 'crownheight'}
-            ,{field: 'length'}
-            ,{field: 'width'}
-            ,{field: 'flrc'}
-            ,{field: 'tinch'}
-            ,{field: 'milky'}
-            ,{field: 'cut'}
-            ,{field: 'pol'}
-            ,{field: 'sym'}
-            ,{field: 'depth'}
-            ,{field: 'cps'}
-            ,{field: '-2'}
-            ,{field: '-1'}
-            ,{field: '+1'}
-            ,{field: '+2'}
+            ,{field: 'shape',displayName:"shape"}
+            ,{field: 'partroughwt',displayName:"partroughwt"}
+            ,{field: 'partpolishwt',displayName:"partpolishwt"}
+            ,{field: 'color',displayName:"color"}
+            ,{field: 'clarity',displayName:"clarity"}
+            ,{field: 'flrc',displayName:"flrc"}
+            ,{field: 'cut',displayName:"cut"}
+            ,{field: 'pol',displayName:"pol"}
+            ,{field: 'sym',displayName:"sym"}
+            ,{field: 'depth',displayName:"depth"}
+            ,{field: 'fl',displayName:"natts"}
+            ,{field: 'tinch',displayName:"tinch"}
+            ,{field: 'ratio',displayName:"ratio"}
+            ,{field: 'milky',displayName:"milky"}
+            ,{field: 'top opens',displayName:"top opens"}
+            ,{field: 'bot opens',displayName:"bot opens"}
+            ,{field: 'lab',displayName:"lab"}
+            ,{field: 'shade range',displayName:"shade range"}
+            ,{field: 'pointer range',displayName:"pointer range"}
+            ,{field: 'assort',displayName:"assort"}
+            ,{field: 'trend',displayName:"trend"}
+            ,{field: 'price',displayName:"price"}
+            ,{field: 'value',displayName:"value"}
+            ,{field: 'labour',displayName:"labour"}
+            ,{field: 'net value',displayName:"net value"}
+            ,{field: 'net value%',displayName:"net value%"}
+            ,{field: 'reminder',displayName:"reminder"}
+            ,{field: 'remark',displayName:"remark"}
+            ,{field: 'grading',displayName:"grading"}
+            ,{field: '+2',displayName:"+2"}
+            ,{field: '+1',displayName:"+1"}
+            ,{field: '-1',displayName:"-1"}
+            ,{field: '-2',displayName:"-2"}
+            ,{field:'id',displayName:'' }
+            ,{field:'stone id',displayName:'' }
+            ,{field:'username',displayName:'' }
+            ,{field:'totalr.wt',displayName:'' }
+            ,{field:'diameter',displayName:'' }
+            ,{field:'td%',displayName:'' }
+            ,{field:'tdmm',displayName:'' }
+            ,{field:'table%',displayName:'' }
+            ,{field:'pavilangle',displayName:'' }
+            ,{field:'crownangle',displayName:'' }
+            ,{field:'crownHeight',displayName:'' }
+            ,{field:'length',displayName:'' }
+            ,{field:'width',displayName:'' }
+            ,{field:'cps',displayName:'' }
         ])
-        //window.alert("4")
+        addRequiredCols(data)
+        processRows(rows)
     }
     return (
         <div>
@@ -62,7 +110,7 @@ const AllocationPage = () => {
                 return <div className='plan-container' style={styles.planContainer}>
                 <h5 style={styles.h5}>{party}</h5>
                 <hr/>
-                <PartyTable columns={columns} data={data} />
+                <PartyTable columns={columns} data={rows} hideCols={hideCols}/>
                 <hr/>
                 </div>
             })
@@ -80,3 +128,44 @@ const styles={
     }
 }
 export default AllocationPage;
+
+
+
+/* 
+
+'id'
+stone id'
+'fl'
+'username'
+totalr.wt'
+'partroughwt'
+'partpolishwt'
+'diameter'
+'ratio'
+'grading'
+'clarity'
+'color'
+'shape'
+'td%'
+'tdmm'
+'table%'
+'pavilangle'
+'crownangle'
+'crownheight'
+'length'
+'width'
+'flrc'
+'tinch'
+'milky'
+'cut'
+'pol'
+'sym'
+'depth'
+'cps'
+'-2'
+'-1'
+'+1'
+'+2'
+
+
+*/

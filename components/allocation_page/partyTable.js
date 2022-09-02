@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PartyTable = ({columns,data}) => {
+const PartyTable = ({columns,data,hideCols}) => {
     const getSum=(col)=>{
         //console.log(data)
         let sum=0;
@@ -22,7 +22,8 @@ const PartyTable = ({columns,data}) => {
                     <tr key="1">
                         {
                             columns.map((colName,index)=>{
-                                return <th key={index}>{colName.field}</th>
+                                if(!hideCols.includes(colName.field))
+                                return <th key={index}>{colName.displayName}</th>
                             })
                         }
                     </tr>
@@ -32,6 +33,7 @@ const PartyTable = ({columns,data}) => {
                             <tr>
                                             {
                                                 columns.map((col,index)=>{
+                                                    if(!hideCols.includes(col.field))
                                                     return <td key={index}>
                                                         {getSum(col.field)}
                                                     </td>
@@ -42,8 +44,11 @@ const PartyTable = ({columns,data}) => {
                         {
                             data.map((row,index)=>{
                                 return <tr key={index}>{
-                                    Object.keys(row).map((cell,index)=>{
-                                        return <td key={index}>{row[cell]}</td>
+                                    columns.map((cell,index)=>{
+                                        //return cell only if col exists
+                                        if(!hideCols.includes(cell.field))
+                                            return <td key={index}>{row[cell.field]}</td>
+                                        
                                     })
                                 }</tr>
                             })
