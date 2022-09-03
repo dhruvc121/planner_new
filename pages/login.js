@@ -45,14 +45,49 @@ const Login = () => {
         }
     }
     return (
-        <div>
-            <form onSubmit={(e)=>handleSubmit(e)}>
-                <input type="text" placeholder='useranme'  value={username} onChange={(e)=>setUsername(e.target.value)} required></input>
-                <input type="password" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)} required></input>
-                <button type="submit">Submit</button>
+        <div className='login-form-container' style={styles.loginFormContainer}>
+            <form onSubmit={(e)=>handleSubmit(e)} style={styles.form}>
+                <input style={styles.input} type="text" placeholder='username'  value={username} onChange={(e)=>setUsername(e.target.value)} required></input>
+                <input style={styles.input} type="password" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)} required></input>
+                <button type="submit" style={styles.button}>Submit</button>
             </form>
         </div>
     );
 }
 
+
+const styles={
+    loginFormContainer:{
+        minWidth:"20%",
+        position:" absolute",
+        top:" 50%",
+        left:" 50%",
+        transform:" translate(-50%, -50%)",
+        padding:" 1rem",
+        border:" 1px solid #eee",
+        boxShadow:" 1px 1px 1px 1px #eee",
+        borderRadius:" 0.5rem",
+    },
+    form:{
+        display:" flex",
+        flexDirection:" column",
+        justifyContent:" center",
+        alignItems:" center",
+    },
+    input:{
+        margin:"0.25rem 0.5rem",
+        width:" 100%",
+        padding:" 0.25rem 0.5rem",
+        border:" 1px solid #eee",
+        borderRadius:" 5px",
+        lineHeight:" 1rem",
+    },
+    button:{
+        width:" 100%",
+        margin:" 0.25rem",
+    }
+}
+
 export default Login;
+
+
