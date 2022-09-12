@@ -34,19 +34,7 @@ const PlanImport = () => {
     },  
   ]
     
-  /* const addSumRow=(list)=>{
-    let newArr=[...list]
-    const getEmptyRow=()=>{
-      return row
-    }
-    list.map((row,index)=>{
-      
-      //when stone id change
-      const emptyRow=getEmptyRow()
-      //push this row to specific index
-      newArr.splice(index,0,emptyRow)
-    })
-  } */
+  
 
 
     // process CSV data
@@ -141,13 +129,37 @@ const PlanImport = () => {
                 }else if(obj.grading.match("KP DISC") || obj.grading.match("KP-DISC") || obj.grading.match("KP DISCOUNT") || obj.grading.match("KP-DISCOUNT") || obj.grading.match("KP- DISCOUNT")){
                   return "GOOD"
                 }else{
-                  return ""
+                  return "EXCELLENT"  //default values for cut
                 }
               }else{
-                return ""
+                return "EXCELLENT"    //default values for cut
               }
             }
-
+            /* const getCPSValue=(obj)=>{
+              let c,p,s
+              //set 'c' value
+              c=getCutValue(obj)
+              if(c=="EXCELLENT")
+                c="X"
+              else if(c=="V. GOOD")
+                c="V"
+              else c="G"
+              //set 'p' value
+              p=getPolValue(obj)
+              if(p=="EXCELLENT")
+                p="X"
+              else if(p=="V. GOOD")
+                p="V"
+              else p="G"
+              //set 's' value
+              s=getSymValue()
+              if(s=="EXCELLENT")
+                s="X"
+              else if(s=="V. GOOD")
+                s="V"
+              else s="G"
+              return c+p+s
+            } */
 
             // remove the blank rows
             if (Object.values(obj).filter(x => x).length > 0) {

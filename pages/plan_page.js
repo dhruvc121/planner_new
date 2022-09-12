@@ -12,28 +12,11 @@ const PlanPage = () => {
     const {plans}=state
     const router=useRouter()
     React.useEffect(()=>{
-        if(!state.user.id){
-            router.push('/login')
-        }
-        const getMasterData=async()=>{
-            const {data}=await axios.get('/api/masterdata')
-            dispatch({type:"MASTER",payload:data})
-        }
-        getMasterData()
-        const getColStatus=async()=>{
-            try{
-                const {data}=await axios.get('/api/columnmasterdata')
-                dispatch({type:"SET_COL_STATUS",payload:data.rows})
-             
-            }catch(err){
-                console.log(err)
-                window.alert("Fetch data failed!")
+        if(Object.keys(state.colStatus).length==0){
+            router.push('/home')
             }
-        }
-        getColStatus()
-        console.log(state.user)
+        dispatch({type:"PAGE",payload:"plan"})
     },[])
-    console.log(state.plans)
     return (
         <div>
         <PlanImport/>

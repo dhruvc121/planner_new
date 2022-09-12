@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import { Store } from '../../../utils/store';
 
@@ -44,8 +45,8 @@ const SelectFields=(props)=>{
 
 const InputModal=(props)=>{
 const {state,dispatch}=React.useContext(Store)
-const {master,colStatus}=state
-const {posY}=props
+const {master,colStatus,currPage}=state
+const {posY}=props||100
 const style={
       position:"absolute",
       top:`${posY}px`,
@@ -92,47 +93,81 @@ const [input,setInput]=React.useState({
     depth:"",
     ratio:props.rowData.ratio||"",
    })
-   const handleSubmit=()=>{
-      let update=[...state.plans] 
-      console.log(props.rowData.id)
-      update[props.id].data.splice(props.rowData.index,1,{...props.rowData,...input,clarity:input.purity,partroughwt:input.rghwt,partpolishwt:input.polwt,fl:input.natts})  
-      if(update[props.id].data[props.rowData.index])  delete update[props.id].data[props.rowData.index].natts;
-      if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].purity;
-      if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].polwt;
-      if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].rghwt;
-      if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].index;
-      dispatch({type:"UPDATE_PLANS",payload:update})
+   const handleSubmit=async()=>{
+    const getCPSValue=(c,p,s)=>{
+      if(c=="EXCELLENT")
+        c="X"
+      else if(c=="V. GOOD")
+        c="V"
+      else c="G"
+      //set 'p' value
+      //p=getPolValue(obj)
+      if(p=="EXCELLENT")
+        p="X"
+      else if(p=="V. GOOD")
+        p="V"
+      else p="G"
+      //set 's' value
+      //s=getSymValue()
+      if(s=="EXCELLENT")
+        s="X"
+      else if(s=="V. GOOD")
+        s="V"
+      else s="G"
+      return c+p+s
+    }  
+    if(currPage!="allocation"){
+        let update=[...state.plans] 
+       // console.log(props.rowData.id)
+        update[props.id].data.splice(props.rowData.index,1,{...props.rowData,...input,clarity:input.purity,partroughwt:input.rghwt,partpolishwt:input.polwt,fl:input.natts})  
+        if(update[props.id].data[props.rowData.index])  delete update[props.id].data[props.rowData.index].natts;
+        if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].purity;
+        if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].polwt;
+        if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].rghwt;
+        if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].index;
+        dispatch({type:"UPDATE_PLANS",payload:update})
+        /* props.setRowData({})
+        let ele=document.querySelector('.active')
+        console.log(ele)
+        ele.classList.remove('active') */
+      }else{
+        // update single row in database for allocation page
+       // window.alert("here")
+
+       try{
+        const reqObj={...props.rowData,...input,cps:getCPSValue(input.cut,input.pol,input.sym)}
+        const res=await axios.put('/api/allocation/updateallocatedstone',{data:reqObj})
+        console.log(reqObj,input,"===================")
+        window.alert(res.data.message)
+        props.getallocationdata()
+       }catch(err){
+          
+        window.alert(`Data update failed. check console for error.`)
+        console.log(err)
+       }
+      }
       props.setRowData({})
-      let ele=document.querySelector('.active')
-      console.log(ele)
-      ele.classList.remove('active')
+        let ele=document.querySelector('.active')
+        //console.log(ele)
+        ele.classList.remove('active')
    }
    const handleCancel=()=>{
+   // window.alert("heree")
     props.setRowData({})
     let ele=document.querySelector('.active')
     ele.classList.remove('active')
    }
+   //console.log(props.rowData)
     return  <div style={style}>
       <div style={{display:"flex"}}>
-        {/* <SelectFields input={input} setInput={setInput} title="purity" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="natts" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="color" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="flrc" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="tinch" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="milky" master={master}/>  
-        <SelectFields input={input} setInput={setInput} title="shape" master={master}/>
-        <TextFields input={input} setInput={setInput} title="rghwt" master={master}/>
-        <TextFields input={input} setInput={setInput} title="polwt" master={master}/>
-        <TextFields input={input} setInput={setInput} title="diameter" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="cut" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="pol" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="sym" master={master}/>
-        <SelectFields input={input} setInput={setInput} title="depth" master={master}/>
-        <TextFields input={input} setInput={setInput} title="ratio" master={master}/> */}
         {
           titleList.map((title,index)=>{
+            //console.log("here",titleList)
             if(title.type=="select"){
+              
               let colIndex=colStatus.findIndex((cols)=>cols.col_name==title.title)
+
+             // console.log(colIndex)
               if(colIndex!=-1 && colStatus[colIndex].status){
                 return <SelectFields key={index} input={input} setInput={setInput} title={title.title} master={master}/>
               }

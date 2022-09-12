@@ -6,6 +6,7 @@ const handler=nc()
 handler.get(async(req,res)=>{
     try{
         const data=await pool.query("select * from tbl_visible_columns order by id")
+        /* console.log(data.rows) */
        res.send({rows:data.rows})        
     }catch(err){
         console.log(err)

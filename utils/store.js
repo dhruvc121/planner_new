@@ -14,6 +14,7 @@ const reducer=(state,action)=>{
         case "SET_COL_STATUS": return{...state,colStatus:action.payload}
         case "MASTER":  return {...state,master:action.payload}
         case 'SET_USER': return {...state,user:action.payload}
+        case 'PAGE': return {...state,currPage:action.payload}
         default:return state;
     }
 }

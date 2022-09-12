@@ -22,13 +22,7 @@ export const ContextMenu=({showMenu,setShowMenu,eventData,columns,state,dispatch
         dispatch({type:"UPDATE_PLANS",payload:updatedPlans})
         setShowMenu(false)
     }
-    /* const getEmptyRow=()=>{
-        let row={}
-        props.columns.map((title)=> row[title.field]="")
-        row.id=props.data[props.data.length-1].id + 1
-        row['stone id']=props.data[props.data.length-1]['stone id']
-        return row
-    } */
+    
     const createStone=(id)=>{
         let update=[...state.plans]
         let emptyRow=createEmptyRow()
@@ -79,33 +73,13 @@ const PlanTable = ({data,columns,id}) => {
         return row
       }
 
-    /* const handleRightClick=(e)=>{
-        e.preventDefault()
-        const planId=e.target.parentElement.attributes.id.value
-        const index=e.target.parentElement.attributes.data.value
-        
-        const x=e.pageX
-        const y=e.pageY
-        setShowMenu(true)
-        //open modal and get option
-
-        //if sub stone
-            addSubStone(e,planId,index)
-        //if new stone
-    } */
+    
     const handleRightClick=(e)=>{
         e.preventDefault()
         console.log("1")
         setEventData({...e})
         setShowMenu(true)
-        /* const planId=e.target.parentElement.attributes.id.value
-        const index=e.target.parentElement.attributes.data.value
-           
-        let emptyRow=createEmptyRow()
-        let newData=[...state.plans[planId].data]
-        newData.splice(parseInt(index)+1,0,{...emptyRow,id:state.plans[planId].data[index].id,['stone id']:state.plans[planId].data[index]['stone id']})
-        const updatedPlans=state.plans.map((plan)=>{return plan.id==e.target.parentElement.id?{...plan,data:newData}:plan})
-        dispatch({type:"UPDATE_PLANS",payload:updatedPlans}) */
+       
     }
     const handleClick=(e,row,index)=>{
        e.target.parentElement.className="active"
@@ -113,7 +87,28 @@ const PlanTable = ({data,columns,id}) => {
        setPosY(e.pageY+10)
        setRowData({...row,index})
     }
-    
+    const getCPSValue=(c,p,s)=>{
+        if(c=="EXCELLENT")
+          c="X"
+        else if(c=="V. GOOD")
+          c="V"
+        else c="G"
+        //set 'p' value
+        //p=getPolValue(obj)
+        if(p=="EXCELLENT")
+          p="X"
+        else if(p=="V. GOOD")
+          p="V"
+        else p="G"
+        //set 's' value
+        //s=getSymValue()
+        if(s=="EXCELLENT")
+          s="X"
+        else if(s=="V. GOOD")
+          s="V"
+        else s="G"
+        return c+p+s
+      }
     return (
         <div>
             <table>
@@ -138,7 +133,9 @@ const PlanTable = ({data,columns,id}) => {
                                             let colIndex=colStatus.findIndex((cols)=>cols.col_name==cell)
                                             if(colStatus[colIndex].status){
                                             return <td key={index}>
-                                                {row[cell]}
+                                            {/* row[cell] */
+                                                (cell=="cps")?getCPSValue(row.cut,row.pol,row.sym):row[cell]
+                                            }
                                             </td> }
                                         })
                                     }
@@ -164,7 +161,9 @@ const PlanTable = ({data,columns,id}) => {
                                                     let colIndex=colStatus.findIndex((cols)=>cols.col_name==cell)
                                                     if(colStatus[colIndex].status){
                                                     return <td key={index}>
-                                                        {row[cell]}
+                                                        {/* row[cell] */
+                                                            (cell=="cps")?getCPSValue(row.cut,row.pol,row.sym):row[cell]
+                                                        }
                                                     </td> }
                                                 })
                                             }
@@ -189,7 +188,9 @@ const PlanTable = ({data,columns,id}) => {
                                                     let colIndex=colStatus.findIndex((cols)=>cols.col_name==cell)
                                                     if(colStatus[colIndex].status){
                                                     return <td key={index}>
-                                                        {row[cell]}
+                                                        {/* row[cell] */
+                                                            (cell=="cps")?getCPSValue(row.cut,row.pol,row.sym):row[cell]
+                                                        }
                                                     </td> }
                                                 })
                                             }
@@ -214,7 +215,9 @@ const PlanTable = ({data,columns,id}) => {
                                                     let colIndex=colStatus.findIndex((cols)=>cols.col_name==cell)
                                                     if(colStatus[colIndex].status){
                                                     return <td key={index}>
-                                                        {row[cell]}
+                                                        {/* row[cell] */
+                                                            (cell=="cps")?getCPSValue(row.cut,row.pol,row.sym):row[cell]
+                                                        }
                                                     </td> }
                                                 })
                                             }

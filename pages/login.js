@@ -14,7 +14,7 @@ const Login = () => {
             const {data}=await axios.get("/api/login",{withCredentials:true})
             if(data.id){
                 dispatch({type:"SET_USER",payload:{username:data.username,user_type:data.user_type,id:data.id}})   
-                router.push('/')
+                router.push('/home')
             }
         }
         if(jsCookie.get('Planner_Login_Token')){

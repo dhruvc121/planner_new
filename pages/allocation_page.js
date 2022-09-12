@@ -1,26 +1,30 @@
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import React from 'react';
 import PartyTable from '../components/allocation_page/partyTable';
 import PageHeader from '../components/plan_page/pageHeader';
+import { Store } from '../utils/store';
 
 const AllocationPage = () => {
     const [rows,setRows]=React.useState([])
     const [columns,setColumns]=React.useState([])
+    const {state,dispatch}=React.useContext(Store)
+    const router=useRouter()
     const requiredParams={
         'top opens':"",
-'bot opens':"",
-'lab':"",
-'shade range':"",
-'pointer range':"",
-'assort':"",
-'trend':"",
-'price':"",
-'value':"",
-'labour':"",
-'net value':"",
-'net value%':"",
-'reminder':"",
-'remark':"",
+        'bot opens':"",
+        'lab':"",
+        'shade range':"",
+        'pointer range':"",
+        'assort':"",
+        'trend':"",
+        'price':"",
+        'value':"",
+        'labour':"",
+        'net value':"",
+        'net value%':"",
+        'reminder':"",
+        'remark':"",
     }
     const hideCols=['id',
     'stone id',
@@ -35,8 +39,15 @@ const AllocationPage = () => {
     'crownHeight',
     'length',
     'width',
-    'cps']
+    'cut',
+    'pol',
+    'sym'
+    ]
     React.useEffect(()=>{
+        if(Object.keys(state.colStatus).length==0){
+        router.push('/home')
+        }
+        dispatch({type:"PAGE",payload:"allocation"})
         getData()
     },[])
     const addRequiredCols=(data)=>{
@@ -44,11 +55,8 @@ const AllocationPage = () => {
         update=update.map(row=>{ return {...row,...requiredParams}})
         setRows(update)
     }
-    const processRows=(tblRows)=>{
-        let update=[...tblRows]
-
-    }
     const getData=async()=>{
+        //console.log("called")
         const {data}=await axios.get('/api/allocation/getallocationdata')  
         setColumns([
             ,{field: 'shape',displayName:"shape"}
@@ -57,6 +65,7 @@ const AllocationPage = () => {
             ,{field: 'color',displayName:"color"}
             ,{field: 'clarity',displayName:"clarity"}
             ,{field: 'flrc',displayName:"flrc"}
+            ,{field:'cps',displayName:'cps' }
             ,{field: 'cut',displayName:"cut"}
             ,{field: 'pol',displayName:"pol"}
             ,{field: 'sym',displayName:"sym"}
@@ -97,10 +106,8 @@ const AllocationPage = () => {
             ,{field:'crownHeight',displayName:'' }
             ,{field:'length',displayName:'' }
             ,{field:'width',displayName:'' }
-            ,{field:'cps',displayName:'' }
         ])
         addRequiredCols(data)
-        processRows(rows)
     }
     return (
         <div>
@@ -110,7 +117,7 @@ const AllocationPage = () => {
                 return <div className='plan-container' style={styles.planContainer}>
                 <h5 style={styles.h5}>{party}</h5>
                 <hr/>
-                <PartyTable columns={columns} data={rows} hideCols={hideCols}/>
+                <PartyTable columns={columns} data={rows} hideCols={hideCols} getData={getData}/>
                 <hr/>
                 </div>
             })
@@ -129,43 +136,3 @@ const styles={
 }
 export default AllocationPage;
 
-
-
-/* 
-
-'id'
-stone id'
-'fl'
-'username'
-totalr.wt'
-'partroughwt'
-'partpolishwt'
-'diameter'
-'ratio'
-'grading'
-'clarity'
-'color'
-'shape'
-'td%'
-'tdmm'
-'table%'
-'pavilangle'
-'crownangle'
-'crownheight'
-'length'
-'width'
-'flrc'
-'tinch'
-'milky'
-'cut'
-'pol'
-'sym'
-'depth'
-'cps'
-'-2'
-'-1'
-'+1'
-'+2'
-
-
-*/

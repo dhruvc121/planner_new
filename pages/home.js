@@ -1,14 +1,36 @@
 import React from 'react';
 import {useRouter} from 'next/router'
 import { Store } from '../utils/store';
+import axios from 'axios';
 
 const Home = () => {
     const router=useRouter()
-    const {state}=React.useContext(Store)
+    const {state,dispatch}=React.useContext(Store)
     React.useEffect(()=>{
         if(!state.user.id){
             router.push('/login')
         }
+    },[])
+    React.useEffect(()=>{
+        if(!state.user.id){
+            router.push('/login')
+        }
+        const getMasterData=async()=>{
+            const {data}=await axios.get('/api/masterdata')
+            dispatch({type:"MASTER",payload:data})
+        }
+        getMasterData()
+        const getColStatus=async()=>{
+            try{
+                const {data}=await axios.get('/api/columnmasterdata')
+                dispatch({type:"SET_COL_STATUS",payload:data.rows})
+            }catch(err){
+                console.log(err)
+                window.alert("Fetch data failed!")
+            }
+        }
+        getColStatus()
+        console.log(state.user)
     },[])
     return (
         <div className='container' style={styles.container}>
