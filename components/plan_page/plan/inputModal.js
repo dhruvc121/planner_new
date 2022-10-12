@@ -119,7 +119,9 @@ const [input,setInput]=React.useState({
     if(currPage!="allocation"){
         let update=[...state.plans] 
        // console.log(props.rowData.id)
-        update[props.id].data.splice(props.rowData.index,1,{...props.rowData,...input,clarity:input.purity,partroughwt:input.rghwt,partpolishwt:input.polwt,fl:input.natts})  
+        update[props.id].data.splice(props.rowData.index,1,{...props.rowData
+          ,...input,clarity:input.purity,partroughwt:input.rghwt,partpolishwt:input.polwt,fl:input.natts,cps:getCPSValue(input.cut,input.pol,input.sym)
+        })  
         if(update[props.id].data[props.rowData.index])  delete update[props.id].data[props.rowData.index].natts;
         if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].purity;
         if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].polwt;

@@ -134,7 +134,7 @@ const PlanTable = ({data,columns,id}) => {
                                             if(colStatus[colIndex].status){
                                             return <td key={index}>
                                             {/* row[cell] */
-                                                (cell=="cps")?getCPSValue(row.cut,row.pol,row.sym):row[cell]
+                                                row[cell]
                                             }
                                             </td> }
                                         })
@@ -162,7 +162,7 @@ const PlanTable = ({data,columns,id}) => {
                                                     if(colStatus[colIndex].status){
                                                     return <td key={index}>
                                                         {/* row[cell] */
-                                                            (cell=="cps")?getCPSValue(row.cut,row.pol,row.sym):row[cell]
+                                                            row[cell]
                                                         }
                                                     </td> }
                                                 })
@@ -189,7 +189,7 @@ const PlanTable = ({data,columns,id}) => {
                                                     if(colStatus[colIndex].status){
                                                     return <td key={index}>
                                                         {/* row[cell] */
-                                                            (cell=="cps")?getCPSValue(row.cut,row.pol,row.sym):row[cell]
+                                                            row[cell]
                                                         }
                                                     </td> }
                                                 })
@@ -216,7 +216,7 @@ const PlanTable = ({data,columns,id}) => {
                                                     if(colStatus[colIndex].status){
                                                     return <td key={index}>
                                                         {/* row[cell] */
-                                                            (cell=="cps")?getCPSValue(row.cut,row.pol,row.sym):row[cell]
+                                                            row[cell]
                                                         }
                                                     </td> }
                                                 })

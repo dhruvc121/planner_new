@@ -39,6 +39,7 @@ const PlanImport = () => {
 
     // process CSV data
     const processData = dataString => {
+        console.log(Date.now())
         const dataStringLines = dataString.split(/\r\n|\n/);
         const headers = dataStringLines[0].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
       //let count=1
@@ -57,26 +58,23 @@ const PlanImport = () => {
               }
               if (headers[j]) {
                 if(headers[j].toLowerCase().trim()=='shape'){
-                  obj[headers[j].toLowerCase().trim()] = shapeDetail.find(obj=>d==obj.shapename).original_name
+                  obj[headers[j].toLowerCase().trim()] = shapeDetail.find(obj=>d==obj.shapeName).originalName
                 }else if(headers[j].toLowerCase().trim()=='sym'){
-                  obj[headers[j].toLowerCase().trim()] = symDetails.find(obj=>d==obj.symName).original_name
-                  //obj[headers[j].toLowerCase().trim()] = symDetails.find(item=>obj.grading==item.symName).original_name
+                  obj[headers[j].toLowerCase().trim()] = symDetails.find(obj=>d==obj.symName).originalName
+                  //obj[headers[j].toLowerCase().trim()] = symDetails.find(item=>obj.grading==item.symName).originalName
                 }else{
                   obj[headers[j].toLowerCase().trim()] = d;
                 }
               }
             }
             const getSymValue=()=>{
-              return symDetails.find(item=>obj.grading==item.symName).original_name||"EXCELLENT"
+             // console.log(symDetails.find(item=>obj.grading==item.symName))
+              return symDetails.find(item=>obj.grading==item.symName).originalName||"EXCELLENT"
             }
             const getPolValue=(obj)=>{
-              /* if(count){
-                console.log(obj.partpolishwt,"0.69",obj.partpolishwt>0.33,obj.partpolishwt<0.69,"====================");
-                count--;
-              } */
               const symmetry=getSymValue()
               if(obj.shape=="ROUND"){         //for round shapes
-                console.log("if")
+               // console.log("if")
                 if(obj.partpolishwt<0.298){
                   if(symmetry=="EXCELLENT" ){
                     return "V. GOOD"
@@ -98,7 +96,7 @@ const PlanImport = () => {
                 }
               }
               else{           //for fancy shapes
-                console.log("else")
+                //console.log("else")
                 if(obj.partpolishwt<0.298){
                   if(symmetry=="EXCELLENT" ){
                     return "V. GOOD"
@@ -135,7 +133,7 @@ const PlanImport = () => {
                 return "EXCELLENT"    //default values for cut
               }
             }
-            /* const getCPSValue=(obj)=>{
+            const getCPSValue=(obj)=>{
               let c,p,s
               //set 'c' value
               c=getCutValue(obj)
@@ -159,7 +157,7 @@ const PlanImport = () => {
                 s="V"
               else s="G"
               return c+p+s
-            } */
+            }
 
             // remove the blank rows
             if (Object.values(obj).filter(x => x).length > 0) {
@@ -172,7 +170,7 @@ const PlanImport = () => {
               pol:getPolValue(obj),
               sym: getSymValue(),           //sym will get its value from grading generalization
               depth:"",
-              cps:"",
+              cps:getCPSValue(obj),
               ['-2']:"",
               ['-1']:"",
               ['+1']:"",
@@ -188,7 +186,7 @@ const PlanImport = () => {
 
         //addSumRow(list)
         dispatch({type:"UPDATE_PLANS",payload:[...state.plans,{id:state.plans.length,data:list,columns:[...columns,...requiredcols]}]})
-        
+        console.log(Date.now(),"=======")
       }
       // handle file upload
       const handleFileUpload = e => {
@@ -222,6 +220,7 @@ const PlanImport = () => {
             />
         </div>
         <button onClick={()=>fileInput.current.click()}>import</button>
+        {console.log(Date.now(),"=======")}
         </div>
     );
 }

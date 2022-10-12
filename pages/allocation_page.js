@@ -47,6 +47,7 @@ const AllocationPage = () => {
         if(Object.keys(state.colStatus).length==0){
         router.push('/home')
         }
+        dispatch({type:"UPDATE_PLANS",payload:[]})
         dispatch({type:"PAGE",payload:"allocation"})
         getData()
     },[])
