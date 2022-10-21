@@ -2,15 +2,10 @@ import axios from 'axios';
 import React from 'react';
 import { Store } from '../../../utils/store';
 
-
-
 const SelectFields=(props)=>{
-  
-
-    const handleInput=(e)=>{
+  const handleInput=(e)=>{
       props.setInput({...props.input,[props.title]:e.target.value})
-    }
-  
+    }  
     return  <div style={{padding:"5px",margin:"0 5px",width:"7%"}}>
     <h6 style={{margin:0}}>{props.title}</h6>
     
@@ -25,23 +20,19 @@ const SelectFields=(props)=>{
           })
         }
       </ul>
-      </div>
-    
+      </div>    
   </div>
+}
+
+const TextFields=(props)=>{
+  const handleInput=(e)=>{
+    props.setInput({...props.input,[props.title]:e.target.value})
   }
-  const TextFields=(props)=>{
-    const handleInput=(e)=>{
-      props.setInput({...props.input,[props.title]:e.target.value})
-    }
-    return  <div style={{padding:"5px",margin:"0 5px",width:"6%"}}>
-    <h6 style={{margin:0}}>{props.title}</h6>
-      <input style={{width:"100%"}} onChange={handleInput} value={props.input[props.title]}></input>
-    </div>
-  }
-  
-
-
-
+  return  <div style={{padding:"5px",margin:"0 5px",width:"6%"}}>
+  <h6 style={{margin:0}}>{props.title}</h6>
+    <input style={{width:"100%"}} onChange={handleInput} value={props.input[props.title]}></input>
+  </div>
+}
 
 const InputModal=(props)=>{
 const {state,dispatch}=React.useContext(Store)
@@ -55,9 +46,9 @@ const style={
       backgroundColor:"#eee",
       border:"1px solid black",
 }
-//console.log("========",colStatus)
+
 const titleList=[
-  {title:"purity",type:"select"},
+{title:"purity",type:"select"},
 {title:"natts",type:"select"},
 {title:"color",type:"select"},
 {title:"flrc",type:"select"},
@@ -74,7 +65,6 @@ const titleList=[
 {title:"ratio",type:"text"},
 ]
 
-//console.log(shapeDetail.find(obj=>props.rowData.shape==obj.shapename).original_name)
 const [input,setInput]=React.useState({
     purity:props.rowData.clarity||"",
     natts:props.rowData.fl||"",
@@ -118,7 +108,6 @@ const [input,setInput]=React.useState({
     }  
     if(currPage!="allocation"){
         let update=[...state.plans] 
-       // console.log(props.rowData.id)
         update[props.id].data.splice(props.rowData.index,1,{...props.rowData
           ,...input,clarity:input.purity,partroughwt:input.rghwt,partpolishwt:input.polwt,fl:input.natts,cps:getCPSValue(input.cut,input.pol,input.sym)
         })  
@@ -128,14 +117,7 @@ const [input,setInput]=React.useState({
         if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].rghwt;
         if(update[props.id].data[props.rowData.index]) delete update[props.id].data[props.rowData.index].index;
         dispatch({type:"UPDATE_PLANS",payload:update})
-        /* props.setRowData({})
-        let ele=document.querySelector('.active')
-        console.log(ele)
-        ele.classList.remove('active') */
       }else{
-        // update single row in database for allocation page
-       // window.alert("here")
-
        try{
         const reqObj={...props.rowData,...input,cps:getCPSValue(input.cut,input.pol,input.sym)}
         const res=await axios.put('/api/allocation/updateallocatedstone',{data:reqObj})
@@ -143,33 +125,25 @@ const [input,setInput]=React.useState({
         window.alert(res.data.message)
         props.getallocationdata()
        }catch(err){
-          
         window.alert(`Data update failed. check console for error.`)
         console.log(err)
        }
       }
       props.setRowData({})
         let ele=document.querySelector('.active')
-        //console.log(ele)
         ele.classList.remove('active')
    }
    const handleCancel=()=>{
-   // window.alert("heree")
     props.setRowData({})
     let ele=document.querySelector('.active')
     ele.classList.remove('active')
    }
-   //console.log(props.rowData)
     return  <div style={style}>
       <div style={{display:"flex"}}>
         {
           titleList.map((title,index)=>{
-            //console.log("here",titleList)
-            if(title.type=="select"){
-              
+            if(title.type=="select"){ 
               let colIndex=colStatus.findIndex((cols)=>cols.col_name==title.title)
-
-             // console.log(colIndex)
               if(colIndex!=-1 && colStatus[colIndex].status){
                 return <SelectFields key={index} input={input} setInput={setInput} title={title.title} master={master}/>
               }
